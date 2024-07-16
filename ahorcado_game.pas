@@ -6,26 +6,20 @@ CONST
      TEMP = 2000;
      FILA = 4;
      COLUMNA = 3;
+     X = 1;
 
 TYPE
     array_palabra = array[1..10]of string;
     figura_ahorcado = array[1..FILA,1..COLUMNA]of string;
+    tabla_almacena_letras = array[1..10]of string;
+    ahorcado_auxiliar = array[1..4]of string;
 
 VAR
    ar_pal: array_palabra;
    palabra: string;
    ahorcado: figura_ahorcado;
-
-PROCEDURE aginar_valores_figura_ahorcado;
- BEGIN
- ahorcado[1,2]:= 'O';
- ahorcado[2,1]:= '/';
- ahorcado[2,2]:= 'I';
- ahorcado[2,3]:= '\';
- ahorcado[3,2]:= 'I';
- ahorcado[4,1]:='/';
- ahorcado[4,3]:= '\';
- END;
+   tab_alm_let: tabla_almacena_letras;
+   aho_aux:= ahorcado_auxiliar;
 
 PROCEDURE generar_palabra;
 VAR
@@ -82,11 +76,104 @@ VAR
   delay(TEMP);
  END;
 
+FUNCTION valida_caracter(): string;
+VAR
+ caracter,letra: string;
+ BEGIN
+ writeln('>>> Ingrese una unica letra: ');
+ caracter:= readkey;
+ WHILE caracter <> #13 DO
+  BEGIN
+  IF caracter <> #8 THEN
+   BEGIN
+   gotoxy(whereX,whereY);
+   IF whereX = X THEN
+    letra:= caracter;
+    write('*');
+   END
+  ELSE
+   BEGIN
+   gotoxy(whereX - 1,whereY);
+   write(' ',#8);
+   END;
+  caracter:= readkey;
+  END;
+  valida_caracter:= letra;
+ END;
+
 PROCEDURE juego;
 VAR
- f: integer;
+ caracter,cabeza,brazo_izquierdo: string;
+ acierto,j,f,h,error: integer;
  BEGIN
+ textcolor(white);
+ error:= 0;
+ acierto:= 0;
  FOR f:= 1 TO Lenght(palabra) DO
+  BEGIN
+  write('>>> Adivine la letra: ');
+  caracter:= valida_caracter;
+  IF caracter = palabra[f] THEN
+    BEGIN
+    acierto:= acierto + 1;
+    tab_alm_let[f]:= palabra[f];
+    FOR j:= 1 TO acierto DO
+     BEGIN
+       IF tab_alm_let[i] <> ' ' THEN
+        BEGIN
+        textcolor(lightgreen);
+        write('|',tab_alm_let[j]:1);
+        END;
+     END;
+    writeln('*** Muy Bien! ***');
+    END
+  ELSE
+    BEGIN
+    error:= error + 1;
+    IF (error >= 1) AND (error <= 6) THEN
+     BEGIN
+     textcolor(lightred);
+     writeln('X Te has equivocado! X');
+     CASE error OF
+        1:BEGIN
+          cabeza:= 'O';
+          ahorcado[1,2]:= cabeza;
+          FOR h:= 1 TO 1
+           BEGIN
+           write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+           END;
+          END;
+        2:BEGIN
+          brazo_izquierdo:= '/';
+          ahorcado[2,1]:= brazo_izquierdo;
+          FOR h:= 1 TO 2 DO
+           BEGIN
+           write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+           END;
+          END;
+        3:BEGIN
+
+          END;
+        4:BEGIN
+
+          END;
+        5:BEGIN
+
+          END;
+        6:BEGIN
+
+          END;
+     END;
+     END
+    ELSE
+     BEGIN
+     break;
+     writeln('=================');
+     writeln('X HAS FRACASADO X');
+     writeln('=================');
+     END;
+
+  END;
 
  END;
 
