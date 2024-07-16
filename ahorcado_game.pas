@@ -3,12 +3,29 @@ USES crt;
 
 CONST
      POS_X = 10;
+     TEMP = 2000;
+     FILA = 4;
+     COLUMNA = 3;
+
 TYPE
     array_palabra = array[1..10]of string;
+    figura_ahorcado = array[1..FILA,1..COLUMNA]of string;
+
 VAR
    ar_pal: array_palabra;
    palabra: string;
+   ahorcado: figura_ahorcado;
 
+PROCEDURE aginar_valores_figura_ahorcado;
+ BEGIN
+ ahorcado[1,2]:= 'O';
+ ahorcado[2,1]:= '/';
+ ahorcado[2,2]:= 'I';
+ ahorcado[2,3]:= '\';
+ ahorcado[3,2]:= 'I';
+ ahorcado[4,1]:='/';
+ ahorcado[4,3]:= '\';
+ END;
 
 PROCEDURE generar_palabra;
 VAR
@@ -44,7 +61,6 @@ VAR
    END;
      caracter:= readkey;
  END;
-
  palabra:=' ';
  FOR i:= 1 TO 10 DO
   BEGIN
@@ -63,8 +79,7 @@ VAR
   writeln('========================');
   writeln('*** PALABRA GENERADA ***');
   writeln('========================');
-  delay(2000)
-
+  delay(TEMP);
  END;
 
 PROCEDURE cargar_palabra_jugar;
