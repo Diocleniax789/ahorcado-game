@@ -1,5 +1,5 @@
 PROGRAM ahorcado_game;
-USES crt;
+USES crt, SysUtils;
 
 CONST
      POS_X = 10;
@@ -82,10 +82,19 @@ VAR
   delay(TEMP);
  END;
 
+PROCEDURE juego;
+VAR
+ f: integer;
+ BEGIN
+ FOR f:= 1 TO Lenght(palabra) DO
+
+ END;
+
 PROCEDURE cargar_palabra_jugar;
  BEGIN
  generar_palabra;
-
+ clrscr;
+ juego;
  END;
 
 PROCEDURE menu_principal;
