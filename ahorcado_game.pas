@@ -19,7 +19,7 @@ VAR
    palabra: string;
    ahorcado: figura_ahorcado;
    tab_alm_let: tabla_almacena_letras;
-   aho_aux:= ahorcado_auxiliar;
+   aho_aux: ahorcado_auxiliar;
 
 PROCEDURE generar_palabra;
 VAR
@@ -86,8 +86,8 @@ VAR
   BEGIN
   IF caracter <> #8 THEN
    BEGIN
-   gotoxy(whereX,whereY);
-   IF whereX = X THEN
+   gotoxy(X,whereY);
+   IF X = 1 THEN
     letra:= caracter;
     write('*');
    END
@@ -103,15 +103,15 @@ VAR
 
 PROCEDURE juego;
 VAR
- caracter,cabeza,brazo_izquierdo: string;
+ caracter,cabeza,brazo_izquierdo,torso,brazo_derecho,pierna_izquierda,pierna_derecha: string;
  acierto,j,f,h,error: integer;
  BEGIN
+
  textcolor(white);
  error:= 0;
  acierto:= 0;
- FOR f:= 1 TO Lenght(palabra) DO
+ FOR f:= 1 TO Length(palabra) DO
   BEGIN
-  write('>>> Adivine la letra: ');
   caracter:= valida_caracter;
   IF caracter = palabra[f] THEN
     BEGIN
@@ -119,12 +119,13 @@ VAR
     tab_alm_let[f]:= palabra[f];
     FOR j:= 1 TO acierto DO
      BEGIN
-       IF tab_alm_let[i] <> ' ' THEN
+       IF tab_alm_let[j] <> ' ' THEN
         BEGIN
         textcolor(lightgreen);
         write('|',tab_alm_let[j]:1);
         END;
      END;
+     WRITELN();
     writeln('*** Muy Bien! ***');
     END
   ELSE
@@ -138,7 +139,7 @@ VAR
         1:BEGIN
           cabeza:= 'O';
           ahorcado[1,2]:= cabeza;
-          FOR h:= 1 TO 1
+          FOR h:= 1 TO 1 DO
            BEGIN
            write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
            END;
@@ -152,16 +153,36 @@ VAR
            END;
           END;
         3:BEGIN
-
+          torso:= '|';
+          ahorcado[2,2]:= torso;
+          FOR h:= 1 TO 2 DO
+           BEGIN
+            write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+           END;
           END;
         4:BEGIN
-
+          brazo_derecho:= '\';
+          ahorcado[2,3]:= brazo_derecho;
+          FOR h:= 1 TO 2 DO
+           BEGIN
+            write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+           END;
           END;
         5:BEGIN
-
+          pierna_izquierda:= '/';
+          ahorcado[3,1]:= pierna_izquierda;
+          FOR h:= 1 TO 3 DO
+           BEGIN
+            write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+           END;
           END;
         6:BEGIN
-
+          pierna_derecha:= '\';
+          ahorcado[3,3]:= pierna_derecha;
+          FOR h:= 1 TO 3 DO
+           BEGIN
+            write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+           END;
           END;
      END;
      END
@@ -172,8 +193,11 @@ VAR
      writeln('X HAS FRACASADO X');
      writeln('=================');
      END;
-
   END;
+
+
+
+ end;
 
  END;
 
