@@ -11,15 +11,21 @@ CONST
 TYPE
     array_palabra = array[1..10]of string;
     figura_ahorcado = array[1..FILA,1..COLUMNA]of string;
-    tabla_almacena_letras = array[1..10]of string;
-    ahorcado_auxiliar = array[1..4]of string;
 
 VAR
    ar_pal: array_palabra;
    palabra: string;
    ahorcado: figura_ahorcado;
-   tab_alm_let: tabla_almacena_letras;
-   aho_aux: ahorcado_auxiliar;
+
+PROCEDURE inicializar_arreglo_palabra;
+VAR
+ f: integer;
+ BEGIN
+ FOR f:= 1 TO 10 DO
+  BEGIN
+  ar_pal[f]:= ' ';
+  END;
+ END;
 
 PROCEDURE generar_palabra;
 VAR
@@ -80,6 +86,8 @@ FUNCTION valida_caracter(): string;
 VAR
  caracter,letra: string;
  BEGIN
+ textcolor(white);
+ writeln();
  writeln('>>> Ingrese una unica letra: ');
  caracter:= readkey;
  WHILE caracter <> #13 DO
@@ -101,111 +109,175 @@ VAR
   valida_caracter:= letra;
  END;
 
+FUNCTION busca_letra (caracter: string): boolean;
+VAR
+ f: boolean;
+ pos,lim: integer;
+ BEGIN
+ f:= false;
+ pos:= 0;
+ lim:= Length(palabra);
+ REPEAT
+ pos:= pos + 1;
+ IF caracter = palabra[pos] THEN
+  f:= true;
+ UNTIL (pos = lim) OR (f = true);
+ IF f = true THEN
+  BEGIN
+  writeln(palabra[pos]);
+  busca_letra:= true;
+  END
+ ELSE
+  busca_letra:= false;
+ END;
+
 PROCEDURE juego;
 VAR
  caracter,cabeza,brazo_izquierdo,torso,brazo_derecho,pierna_izquierda,pierna_derecha: string;
- acierto,j,f,h,error: integer;
+ acierto,h,error,long_palabra: integer;
  BEGIN
-
  textcolor(white);
  error:= 0;
  acierto:= 0;
- FOR f:= 1 TO Length(palabra) DO
+ long_palabra:= Length(palabra);
+ REPEAT
+ caracter:= valida_caracter;
+ IF busca_letra(caracter) = true THEN
   BEGIN
-  caracter:= valida_caracter;
-  IF caracter = palabra[f] THEN
-    BEGIN
-    acierto:= acierto + 1;
-    tab_alm_let[f]:= palabra[f];
-    FOR j:= 1 TO acierto DO
-     BEGIN
-       IF tab_alm_let[j] <> ' ' THEN
-        BEGIN
-        textcolor(lightgreen);
-        write('|',tab_alm_let[j]:1);
-        END;
-     END;
-     WRITELN();
-    writeln('*** Muy Bien! ***');
-    END
-  ELSE
+  acierto:= acierto + 1;
+  textcolor(lightgreen);
+  writeln();
+  writeln();
+  writeln('*** Muy Bien! ***');
+  END
+
+ ELSE
     BEGIN
     error:= error + 1;
-    IF (error >= 1) AND (error <= 6) THEN
+    IF (error >= 1) AND (error < 7) THEN
      BEGIN
      textcolor(lightred);
+     writeln();
+     writeln();
      writeln('X Te has equivocado! X');
      CASE error OF
         1:BEGIN
+          writeln();
           cabeza:= 'O';
           ahorcado[1,2]:= cabeza;
-          FOR h:= 1 TO 1 DO
-           BEGIN
-           write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
-           END;
+           write(ahorcado[1,1]:1,' ',ahorcado[1,2]:1,' ',ahorcado[1,3]:1);
+           writeln();
           END;
         2:BEGIN
+          writeln();
           brazo_izquierdo:= '/';
           ahorcado[2,1]:= brazo_izquierdo;
           FOR h:= 1 TO 2 DO
            BEGIN
            write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
            END;
+           writeln();
           END;
         3:BEGIN
+          writeln();
           torso:= '|';
           ahorcado[2,2]:= torso;
           FOR h:= 1 TO 2 DO
            BEGIN
             write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+            writeln();
            END;
+           writeln();
           END;
         4:BEGIN
+          writeln();
           brazo_derecho:= '\';
           ahorcado[2,3]:= brazo_derecho;
           FOR h:= 1 TO 2 DO
            BEGIN
             write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+            writeln();
            END;
+           writeln();
           END;
         5:BEGIN
+          writeln();
           pierna_izquierda:= '/';
           ahorcado[3,1]:= pierna_izquierda;
           FOR h:= 1 TO 3 DO
            BEGIN
             write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+            writeln();
            END;
+           writeln();
           END;
         6:BEGIN
+          writeln();
           pierna_derecha:= '\';
           ahorcado[3,3]:= pierna_derecha;
           FOR h:= 1 TO 3 DO
            BEGIN
             write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+            writeln();
            END;
+           writeln();
           END;
      END;
-     END
-    ELSE
-     BEGIN
-     break;
-     writeln('=================');
-     writeln('X HAS FRACASADO X');
-     writeln('=================');
-     END;
+    END;
+
   END;
 
+   UNTIL (acierto = long_palabra) OR (error = 6);
 
-
- end;
+ IF (acierto = long_palabra) THEN
+    BEGIN
+    textcolor(lightgreen);
+    writeln();
+    writeln('=============================');
+    writeln('*** HAS GANADO LA PARTIDA ***');
+    writeln('=============================');
+    writeln();
+    END
+   ELSE IF error = 6 THEN
+    BEGIN
+    textcolor(lightred);
+    writeln();
+    writeln('==============================');
+    writeln('XXX HAS PERDIDO LA PARTIDA XXX');
+    writeln('==============================');
+    writeln();
+    textcolor(lightgreen);
+    writeln('La palabra era: ',palabra);
+    END;
 
  END;
 
 PROCEDURE cargar_palabra_jugar;
+VAR
+ opcion: string;
  BEGIN
+ REPEAT
+ clrscr;
  generar_palabra;
  clrscr;
  juego;
+ REPEAT
+  writeln();
+  textcolor(white);
+  writeln('Desea jugar otra vez[s/n]?: ');
+  readln(opcion);
+  IF (opcion <> 's') AND (opcion <> 'n') THEN
+   BEGIN
+   textcolor(lightred);
+   writeln();
+   writeln('////////////////////////////////////////');
+   writeln('X VALOR INCORRECTO. INGRESE NUEVAMENTE X');
+   writeln('////////////////////////////////////////');
+   writeln();
+   END;
+  UNTIL (opcion = 's') OR (opcion = 'n');
+ UNTIL (opcion = 'n');
+
  END;
 
 PROCEDURE menu_principal;
@@ -233,5 +305,6 @@ VAR
  END;
 
 BEGIN
+inicializar_arreglo_palabra;
 menu_principal;
 END.
