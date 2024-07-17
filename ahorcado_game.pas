@@ -4,7 +4,7 @@ USES crt, SysUtils;
 CONST
      POS_X = 10;
      TEMP = 2000;
-     FILA = 4;
+     FILA = 3;
      COLUMNA = 3;
      X = 1;
 
@@ -27,11 +27,25 @@ VAR
   END;
  END;
 
+PROCEDURE inicializar_figura_ahorcado;
+VAR
+ f,h: integer;
+ BEGIN
+ FOR f:= 1 TO FILA DO
+  BEGIN
+   FOR h:= 1 TO COLUMNA DO
+    BEGIN
+    ahorcado[f,h]:= ' ';
+    END;
+  END;
+ END;
+
 PROCEDURE generar_palabra;
 VAR
  i: integer;
  aux,aux_2,caracter: string;
  BEGIN
+ inicializar_arreglo_palabra;
  writeln('GENERE PALABRA');
  caracter:= readkey;
  i:= 0;
@@ -175,6 +189,7 @@ VAR
           FOR h:= 1 TO 2 DO
            BEGIN
            write(ahorcado[h,1]:1,' ',ahorcado[h,2]:1,' ',ahorcado[h,3]:1);
+           writeln();
            END;
            writeln();
           END;
@@ -224,14 +239,12 @@ VAR
           END;
      END;
     END;
-
   END;
-
    UNTIL (acierto = long_palabra) OR (error = 6);
-
  IF (acierto = long_palabra) THEN
     BEGIN
     textcolor(lightgreen);
+    inicializar_figura_ahorcado;
     writeln();
     writeln('=============================');
     writeln('*** HAS GANADO LA PARTIDA ***');
@@ -241,6 +254,7 @@ VAR
    ELSE IF error = 6 THEN
     BEGIN
     textcolor(lightred);
+    inicializar_figura_ahorcado;
     writeln();
     writeln('==============================');
     writeln('XXX HAS PERDIDO LA PARTIDA XXX');
@@ -249,7 +263,6 @@ VAR
     textcolor(lightgreen);
     writeln('La palabra era: ',palabra);
     END;
-
  END;
 
 PROCEDURE cargar_palabra_jugar;
@@ -277,7 +290,6 @@ VAR
    END;
   UNTIL (opcion = 's') OR (opcion = 'n');
  UNTIL (opcion = 'n');
-
  END;
 
 PROCEDURE menu_principal;
@@ -313,6 +325,5 @@ VAR
  END;
 
 BEGIN
-inicializar_arreglo_palabra;
 menu_principal;
 END.
